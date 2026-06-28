@@ -22,18 +22,6 @@ const SCANNER = {
   // `word` set so they can still appear as identifiers in attribute args).
 };
 
-const PRIMITIVE_TYPES = [
-  // Integer primitives (src/tokenizer/mod.rs builtin-name handling)
-  "u8", "u16", "u32", "u64", "u128", "usize",
-  "i8", "i16", "i32", "i64", "i128", "isize",
-  "f32", "f64",
-  "bool", "void", "char", "c_char", "c_int",
-  // Atomic primitives used by codegen_tests/input/atomics.pyxis
-  "AtomicBool", "AtomicU8", "AtomicU16", "AtomicU32", "AtomicU64",
-  "AtomicI8", "AtomicI16", "AtomicI32", "AtomicI64",
-  "AtomicPtr",
-];
-
 module.exports = grammar({
   name: "pyxis",
 
