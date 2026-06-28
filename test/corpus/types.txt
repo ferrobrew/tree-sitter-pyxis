@@ -494,3 +494,34 @@ pub type Ptrs {
               (path
                 (identifier))))
           (integer_literal))))))
+
+================================================================================
+Opaque (forward-declared) types
+================================================================================
+
+pub type RenderBlock;
+type Generic<T>;
+
+impl RenderBlock {
+    pub fn release(&mut self);
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_definition
+    visibility: (visibility)
+    name: (identifier))
+  (type_definition
+    name: (identifier)
+    (type_parameters
+      (type_parameter
+        name: (identifier))))
+  (impl_block
+    target: (type_identifier
+      (path
+        (identifier)))
+    (function_signature
+      visibility: (visibility)
+      name: (identifier)
+      (mut_self_argument))))

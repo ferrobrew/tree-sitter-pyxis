@@ -116,7 +116,8 @@ module.exports = grammar({
         "type",
         field("name", $.identifier),
         optional($.type_parameters),
-        field("body", $.type_body),
+        // Either a `{ ... }` body or a `;` for an opaque (forward-declared) type.
+        choice(field("body", $.type_body), ";"),
       ),
 
     type_body: ($) => seq("{", repeat($._type_statement), "}"),
