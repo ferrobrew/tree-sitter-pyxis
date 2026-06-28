@@ -29,20 +29,58 @@
 (attribute_list) @attribute
 
 ; ============================================================================
+; Keywords
+; ============================================================================
+; Anonymous tokens (string literals in the grammar) are matched directly.
+; These capture the keyword tokens themselves, not wrapper nodes.
+[
+  "type"
+  "enum"
+  "bitflags"
+  "impl"
+  "fn"
+  "extern"
+  "use"
+  "backend"
+  "vftable"
+  "const"
+  "mut"
+  "as"
+] @keyword
+
+; `prologue` / `epilogue` / `uses` are backend slots, captured via their node
+(backend_slot) @keyword
+
+; ============================================================================
 ; Visibility (pub keyword)
 ; ============================================================================
 (visibility) @keyword
 
 ; ============================================================================
-; Types — builtin primitives
+; Types — references
 ; ============================================================================
+; A `type_identifier` wraps a `path` of one or more `identifier` nodes.
+; The last identifier is the type name; intermediate ones are namespace
+; segments (handled by the Paths section below).
+;
+; The leaf identifier of a `type_identifier` path is the type name (the `.`
+; anchors it as the final child of `path`; intermediate identifiers are
+; namespace segments, handled in the Paths section). Covers every type position
+; — field types, pointer pointees, array elements, generic arguments,
+; return/parameter types, impl targets, type-alias values, enum/bitflags base
+; types. Primitives (u32, bool, …) are just types here — no special-casing.
 (type_identifier
   (path
-    (identifier) @type.builtin
-    (#match? @type.builtin
-      "^(u8|u16|u32|u64|u128|usize|i8|i16|i32|i64|i128|isize|f32|f64|bool|void|char|c_char|c_int|AtomicBool|AtomicU8|AtomicU16|AtomicU32|AtomicU64|AtomicI8|AtomicI16|AtomicI32|AtomicI64|AtomicPtr)$")))
+    (identifier) @type .))
 
-; Type definition names (after `type`/`enum`/`bitflags`)
+; Generic type outer name (e.g. `SharedPtr` in `SharedPtr<Camera>`)
+(generic_type
+  name: (path
+    (identifier) @type .))
+
+; ============================================================================
+; Type definition names (the identifier after `type`/`enum`/`bitflags`)
+; ============================================================================
 (type_definition
   name: (identifier) @type)
 (enum_definition
@@ -63,33 +101,6 @@
 ; Type parameter names (generics)
 (type_parameter
   name: (identifier) @type.parameter)
-
-; Non-builtin type identifiers in field/argument/return positions
-(field
-  type: (type_identifier
-    (path
-      (identifier) @type))
-  (#not-match? @type
-    "^(u8|u16|u32|u64|u128|usize|i8|i16|i32|i64|i128|isize|f32|f64|bool|void|char|c_char|c_int|AtomicBool|AtomicU8|AtomicU16|AtomicU32|AtomicU64|AtomicI8|AtomicI16|AtomicI32|AtomicI64|AtomicPtr)$"))
-
-(function_signature
-  return_type: (type_identifier
-    (path
-      (identifier) @type))
-  (#not-match? @type
-    "^(u8|u16|u32|u64|u128|usize|i8|i16|i32|i64|i128|isize|f32|f64|bool|void|char|c_char|c_int|AtomicBool|AtomicU8|AtomicU16|AtomicU32|AtomicU64|AtomicI8|AtomicI16|AtomicI32|AtomicI64|AtomicPtr)$"))
-
-(named_argument
-  type: (type_identifier
-    (path
-      (identifier) @type))
-  (#not-match? @type
-    "^(u8|u16|u32|u64|u128|usize|i8|i16|i32|i64|i128|isize|f32|f64|bool|void|char|c_char|c_int|AtomicBool|AtomicU8|AtomicU16|AtomicU32|AtomicU64|AtomicI8|AtomicI16|AtomicI32|AtomicI64|AtomicPtr)$"))
-
-; Generic type name (the outer identifier in `Foo<Bar>`)
-(generic_type
-  name: (path
-    (identifier) @type))
 
 ; ============================================================================
 ; Functions
