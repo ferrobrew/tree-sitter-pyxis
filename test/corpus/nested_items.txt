@@ -1,0 +1,68 @@
+================================================================================
+Nested items: enum, type, bitflags, type_alias inside type bodies
+================================================================================
+
+pub type Outer {
+    pub field: u32,
+    pub enum InnerEnum: u8 {
+        A,
+        B,
+    }
+    pub type InnerType {
+        pub inner_field: u16,
+    }
+    pub bitflags InnerFlags: u32 {
+        FLAG_A = 1,
+    }
+    pub type InnerAlias = u32;
+}
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (type_definition
+    visibility: (visibility)
+    name: (identifier)
+    body: (type_body
+      (field
+        visibility: (visibility)
+        name: (identifier)
+        type: (type_identifier
+          (path
+            (identifier))))
+      (enum_definition
+        visibility: (visibility)
+        name: (identifier)
+        base_type: (type_identifier
+          (path
+            (identifier)))
+        (enum_variant
+          name: (identifier))
+        (enum_variant
+          name: (identifier)))
+      (type_definition
+        visibility: (visibility)
+        name: (identifier)
+        body: (type_body
+          (field
+            visibility: (visibility)
+            name: (identifier)
+            type: (type_identifier
+              (path
+                (identifier))))))
+      (bitflags_definition
+        visibility: (visibility)
+        name: (identifier)
+        base_type: (type_identifier
+          (path
+            (identifier)))
+        (bitflag
+          name: (identifier)
+          value: (expression
+            (integer_literal))))
+      (type_alias
+        visibility: (visibility)
+        name: (identifier)
+        value: (type_identifier
+          (path
+            (identifier)))))))

@@ -31,6 +31,20 @@ module.exports = grammar({
 
   extras: ($) => [/\s/, $.line_comment, $.block_comment],
 
+  // Nested item declarations inside `type` bodies: `type_definition` and
+  // `type_alias` share the `type identifier` prefix, and `repeat($._type_statement)`
+  // can't split consecutive nested definitions of the same kind without a
+  // separator. A single combined conflict entry lets tree-sitter use GLR
+  // parsing for all of these cases at once.
+  conflicts: ($) => [
+    [$.type_definition, $.enum_definition, $.bitflags_definition, $.type_alias],
+    [$.type_definition, $.type_alias],
+    [$.enum_definition],
+    [$.bitflags_definition],
+    [$.type_definition],
+    [$.type_alias],
+  ],
+
   // Keywords that should not be matched as identifiers.
   // `word` only governs identifier boundaries for keyword recognition via
   // the implicit `word` rule; reserved words below take precedence.
@@ -114,7 +128,7 @@ module.exports = grammar({
       seq(
         repeat($.doc_comment),
         repeat($.attribute),
-        choice($.field, $.vftable_block),
+        choice($.field, $.vftable_block, $.type_definition, $.enum_definition, $.bitflags_definition, $.type_alias),
       ),
 
     field: ($) =>

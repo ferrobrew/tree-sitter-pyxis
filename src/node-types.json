@@ -1123,11 +1123,27 @@
           "named": true
         },
         {
+          "type": "bitflags_definition",
+          "named": true
+        },
+        {
           "type": "doc_comment",
           "named": true
         },
         {
+          "type": "enum_definition",
+          "named": true
+        },
+        {
           "type": "field",
+          "named": true
+        },
+        {
+          "type": "type_alias",
+          "named": true
+        },
+        {
+          "type": "type_definition",
           "named": true
         },
         {

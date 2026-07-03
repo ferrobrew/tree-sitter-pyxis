@@ -343,6 +343,22 @@
             {
               "type": "SYMBOL",
               "name": "vftable_block"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "type_definition"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "enum_definition"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "bitflags_definition"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "type_alias"
             }
           ]
         }
@@ -2004,7 +2020,30 @@
       "name": "block_comment"
     }
   ],
-  "conflicts": [],
+  "conflicts": [
+    [
+      "type_definition",
+      "enum_definition",
+      "bitflags_definition",
+      "type_alias"
+    ],
+    [
+      "type_definition",
+      "type_alias"
+    ],
+    [
+      "enum_definition"
+    ],
+    [
+      "bitflags_definition"
+    ],
+    [
+      "type_definition"
+    ],
+    [
+      "type_alias"
+    ]
+  ],
   "precedences": [],
   "externals": [],
   "inline": [],
