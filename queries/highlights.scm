@@ -19,6 +19,7 @@
 ; Literals
 ; ============================================================================
 (integer_literal) @number
+(float_literal) @float
 (string_literal) @string
 (raw_string_literal) @string.special
 
@@ -89,6 +90,8 @@
   name: (identifier) @type)
 (type_alias
   name: (identifier) @type)
+(const_declaration
+  name: (identifier) @constant)
 (extern_type
   name: (identifier) @type)
 

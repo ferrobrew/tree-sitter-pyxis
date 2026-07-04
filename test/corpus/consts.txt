@@ -1,0 +1,135 @@
+===
+module-level const with integer value
+===
+pub const MAX_HEALTH: i32 = 100;
+---
+(source_file
+  (const_declaration
+    visibility: (visibility)
+    name: (identifier)
+    type: (type_identifier
+      (path
+        (identifier)))
+    value: (expression
+      (integer_literal))))
+
+===
+const with float value
+===
+pub const PI: f32 = 3.14159;
+---
+(source_file
+  (const_declaration
+    visibility: (visibility)
+    name: (identifier)
+    type: (type_identifier
+      (path
+        (identifier)))
+    value: (expression
+      (float_literal))))
+
+===
+const with string value
+===
+pub const GAME_NAME: str = "Pyxis";
+---
+(source_file
+  (const_declaration
+    visibility: (visibility)
+    name: (identifier)
+    type: (type_identifier
+      (path
+        (identifier)))
+    value: (expression
+      (string_literal))))
+
+===
+const with enum-value reference
+===
+pub const DEFAULT_COLOR: Color = Color::Red;
+---
+(source_file
+  (const_declaration
+    visibility: (visibility)
+    name: (identifier)
+    type: (type_identifier
+      (path
+        (identifier)))
+    value: (expression
+      (path_expression
+        (identifier)
+        (identifier)))))
+
+===
+consts nested inside type, enum, and bitflags bodies
+===
+pub enum Color: u8 {
+    pub const DEFAULT: Color = Color::Red,
+    Red,
+}
+
+pub bitflags AccessFlags: u32 {
+    pub const DEFAULT_MASK: u32 = 3,
+    READ = 1,
+}
+
+pub type Player {
+    pub const STARTING_GOLD: u32 = 500,
+    pub health: i32,
+}
+---
+(source_file
+  (enum_definition
+    visibility: (visibility)
+    name: (identifier)
+    base_type: (type_identifier
+      (path
+        (identifier)))
+    (const_declaration
+      visibility: (visibility)
+      name: (identifier)
+      type: (type_identifier
+        (path
+          (identifier)))
+      value: (expression
+        (path_expression
+          (identifier)
+          (identifier))))
+    (enum_variant
+      name: (identifier)))
+  (bitflags_definition
+    visibility: (visibility)
+    name: (identifier)
+    base_type: (type_identifier
+      (path
+        (identifier)))
+    (const_declaration
+      visibility: (visibility)
+      name: (identifier)
+      type: (type_identifier
+        (path
+          (identifier)))
+      value: (expression
+        (integer_literal)))
+    (bitflag
+      name: (identifier)
+      value: (expression
+        (integer_literal))))
+  (type_definition
+    visibility: (visibility)
+    name: (identifier)
+    body: (type_body
+      (const_declaration
+        visibility: (visibility)
+        name: (identifier)
+        type: (type_identifier
+          (path
+            (identifier)))
+        value: (expression
+          (integer_literal)))
+      (field
+        visibility: (visibility)
+        name: (identifier)
+        type: (type_identifier
+          (path
+            (identifier)))))))

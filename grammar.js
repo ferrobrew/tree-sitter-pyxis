@@ -37,12 +37,13 @@ module.exports = grammar({
   // separator. A single combined conflict entry lets tree-sitter use GLR
   // parsing for all of these cases at once.
   conflicts: ($) => [
-    [$.type_definition, $.enum_definition, $.bitflags_definition, $.type_alias],
+    [$.type_definition, $.enum_definition, $.bitflags_definition, $.type_alias, $.const_declaration],
     [$.type_definition, $.type_alias],
     [$.enum_definition],
     [$.bitflags_definition],
     [$.type_definition],
     [$.type_alias],
+    [$.const_declaration],
   ],
 
   // Keywords that should not be matched as identifiers.
@@ -62,6 +63,7 @@ module.exports = grammar({
         $.enum_definition,
         $.bitflags_definition,
         $.type_alias,
+        $.const_declaration,
         $.impl_block,
         $.backend_block,
         $.extern_type,
@@ -128,7 +130,19 @@ module.exports = grammar({
       seq(
         repeat($.doc_comment),
         repeat($.attribute),
-        choice($.field, $.vftable_block, $.type_definition, $.enum_definition, $.bitflags_definition, $.type_alias),
+        choice(
+          $.field,
+          $.vftable_block,
+          // Nested definitions may carry a trailing comma inside a type body,
+          // matching the field separator (e.g. `pub type Inner { ... },`).
+          // `type_alias` and `const_declaration` already end with their own
+          // `;`/`,` terminator.
+          seq($.type_definition, optional(",")),
+          seq($.enum_definition, optional(",")),
+          seq($.bitflags_definition, optional(",")),
+          $.type_alias,
+          $.const_declaration,
+        ),
       ),
 
     field: ($) =>
@@ -163,7 +177,7 @@ module.exports = grammar({
         ":",
         field("base_type", $._type),
         "{",
-        repeat($.enum_variant),
+        repeat(choice($.enum_variant, $.const_declaration)),
         "}",
       ),
 
@@ -188,7 +202,7 @@ module.exports = grammar({
         ":",
         field("base_type", $._type),
         "{",
-        repeat($.bitflag),
+        repeat(choice($.bitflag, $.const_declaration)),
         "}",
       ),
 
@@ -215,6 +229,23 @@ module.exports = grammar({
         "=",
         field("value", $._type),
         ";",
+      ),
+
+    // ========================================================================
+    // Constants: `const NAME: TYPE = EXPR;` (src/parser/items.rs ConstDefinition)
+    // ========================================================================
+    const_declaration: ($) =>
+      seq(
+        repeat($.doc_comment),
+        repeat($.attribute),
+        field("visibility", optional($.visibility)),
+        "const",
+        field("name", $.identifier),
+        ":",
+        field("type", $._type),
+        "=",
+        field("value", $.expression),
+        choice(";", ","),
       ),
 
     // ========================================================================
@@ -479,9 +510,18 @@ module.exports = grammar({
     expression: ($) =>
       choice(
         $.integer_literal,
+        $.float_literal,
         $.string_literal,
         $.raw_string_literal,
         $.identifier,
+        $.path_expression,
+      ),
+
+    // Path expression for enum-value references: `Color::Red`
+    path_expression: ($) =>
+      seq(
+        $.identifier,
+        repeat1(seq("::", $.identifier)),
       ),
 
     // ========================================================================
@@ -500,6 +540,11 @@ module.exports = grammar({
           /0o[0-7_]+/,
           /[0-9][0-9_]*/,
         ),
+      ),
+
+    float_literal: ($) =>
+      token(
+        /[0-9][0-9_]*\.[0-9][0-9_]*/,
       ),
 
     string_literal: ($) =>
