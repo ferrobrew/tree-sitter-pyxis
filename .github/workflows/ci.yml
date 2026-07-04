@@ -21,9 +21,9 @@ jobs:
 
       - name: Check the generated parser is up to date
         run: |
-          npx tree-sitter generate
+          npm run generate
           if ! git diff --exit-code; then
-            echo "::error::Generated files are stale. Run 'npx tree-sitter generate' and commit the result."
+            echo "::error::Generated files are stale. Run 'npm run generate' and commit the result."
             exit 1
           fi
 
