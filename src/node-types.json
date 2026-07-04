@@ -1137,6 +1137,10 @@
           "named": true
         },
         {
+          "type": "inner_doc_comment",
+          "named": true
+        },
+        {
           "type": "type_alias",
           "named": true
         },
@@ -1578,6 +1582,10 @@
   {
     "type": "impl",
     "named": false
+  },
+  {
+    "type": "inner_doc_comment",
+    "named": true
   },
   {
     "type": "integer_literal",

@@ -57,6 +57,7 @@ module.exports = grammar({
     // ========================================================================
     _module_item: ($) =>
       choice(
+        $.inner_doc_comment,
         $.inner_attribute,
         $.use_declaration,
         $.type_definition,
@@ -586,18 +587,24 @@ module.exports = grammar({
         seq("//", optional(/[^/!\n][^\n]*/)),
       ),
 
-    // Doc comments are lexed as distinct token kinds (DocOuter `///`,
-    // DocInner `//!`) but for tree-sitter purposes we expose them as named
-    // nodes so highlights can target them specifically. The `doc_comment`
-    // node covers both forms and is attached to the following item via the
-    // `repeat($.doc_comment)` in each item rule.
+    // Doc comments are lexed as distinct token kinds in the compiler
+    // (DocOuter `///`, DocInner `//!`); the grammar mirrors that split.
+    // `doc_comment` (`///`) documents the following item and is attached via
+    // the `repeat($.doc_comment)` in each item rule. `inner_doc_comment`
+    // (`//!`) documents the enclosing module and stands alone as a
+    // `_module_item` (see `src/parser/module.rs`, which collects a leading
+    // run of `//!` into the module's doc comments).
     doc_comment: ($) =>
       token(
         prec(1,
-          choice(
-            seq("///", /[^\n]*/),
-            seq("//!", /[^\n]*/),
-          ),
+          seq("///", /[^\n]*/),
+        ),
+      ),
+
+    inner_doc_comment: ($) =>
+      token(
+        prec(1,
+          seq("//!", /[^\n]*/),
         ),
       ),
 

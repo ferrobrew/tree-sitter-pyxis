@@ -1,5 +1,5 @@
-// A representative sample exercising the main Pyxis constructs, used by CI
-// to validate that `queries/highlights.scm` compiles against the grammar.
+//! A representative sample exercising the main Pyxis constructs, used by CI
+//! to validate that `queries/highlights.scm` compiles against the grammar.
 
 use other::Thing;
 

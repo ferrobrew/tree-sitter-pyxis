@@ -13,6 +13,7 @@
 ; ============================================================================
 (line_comment) @comment
 (doc_comment) @comment.documentation
+(inner_doc_comment) @comment.documentation
 (block_comment) @comment
 
 ; ============================================================================

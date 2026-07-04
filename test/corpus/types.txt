@@ -412,6 +412,8 @@ Doc comments and inner attributes
 //! Module doc comment.
 //! Second line.
 
+use other::Thing;
+
 /// Type doc comment.
 pub type Documented {
     /// Field doc.
@@ -421,9 +423,14 @@ pub type Documented {
 --------------------------------------------------------------------------------
 
 (source_file
+  (inner_doc_comment)
+  (inner_doc_comment)
+  (use_declaration
+    (use_tree
+      (identifier)
+      (use_tree
+        (identifier))))
   (type_definition
-    (doc_comment)
-    (doc_comment)
     (doc_comment)
     visibility: (visibility)
     name: (identifier)
