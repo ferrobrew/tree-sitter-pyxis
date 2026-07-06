@@ -422,6 +422,10 @@
             {
               "type": "SYMBOL",
               "name": "const_declaration"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "extern_value"
             }
           ]
         }
@@ -601,6 +605,10 @@
               {
                 "type": "SYMBOL",
                 "name": "const_declaration"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "extern_value"
               }
             ]
           }
@@ -737,6 +745,10 @@
               {
                 "type": "SYMBOL",
                 "name": "const_declaration"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "extern_value"
               }
             ]
           }
@@ -1269,8 +1281,17 @@
           }
         },
         {
-          "type": "STRING",
-          "value": ";"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "STRING",
+              "value": ";"
+            },
+            {
+              "type": "STRING",
+              "value": ","
+            }
+          ]
         }
       ]
     },
@@ -2233,7 +2254,8 @@
       "enum_definition",
       "bitflags_definition",
       "type_alias",
-      "const_declaration"
+      "const_declaration",
+      "extern_value"
     ],
     [
       "type_definition",
@@ -2253,6 +2275,9 @@
     ],
     [
       "const_declaration"
+    ],
+    [
+      "extern_value"
     ]
   ],
   "precedences": [],

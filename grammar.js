@@ -37,13 +37,14 @@ module.exports = grammar({
   // separator. A single combined conflict entry lets tree-sitter use GLR
   // parsing for all of these cases at once.
   conflicts: ($) => [
-    [$.type_definition, $.enum_definition, $.bitflags_definition, $.type_alias, $.const_declaration],
+    [$.type_definition, $.enum_definition, $.bitflags_definition, $.type_alias, $.const_declaration, $.extern_value],
     [$.type_definition, $.type_alias],
     [$.enum_definition],
     [$.bitflags_definition],
     [$.type_definition],
     [$.type_alias],
     [$.const_declaration],
+    [$.extern_value],
   ],
 
   // Keywords that should not be matched as identifiers.
@@ -143,6 +144,9 @@ module.exports = grammar({
           seq($.bitflags_definition, optional(",")),
           $.type_alias,
           $.const_declaration,
+          // A nested extern value (`extern name: T,`) — the value-item analogue
+          // of a nested const. `extern type ...` stays module-level only.
+          $.extern_value,
         ),
       ),
 
@@ -178,7 +182,7 @@ module.exports = grammar({
         ":",
         field("base_type", $._type),
         "{",
-        repeat(choice($.enum_variant, $.const_declaration)),
+        repeat(choice($.enum_variant, $.const_declaration, $.extern_value)),
         "}",
       ),
 
@@ -203,7 +207,7 @@ module.exports = grammar({
         ":",
         field("base_type", $._type),
         "{",
-        repeat(choice($.bitflag, $.const_declaration)),
+        repeat(choice($.bitflag, $.const_declaration, $.extern_value)),
         "}",
       ),
 
@@ -325,7 +329,9 @@ module.exports = grammar({
         field("name", $.identifier),
         ":",
         field("type", $._type),
-        ";",
+        // Module-level extern values end with `;`; nested ones (inside a
+        // type/enum/bitflags body) may end with `,`, matching const/field.
+        choice(";", ","),
       ),
 
     // ========================================================================

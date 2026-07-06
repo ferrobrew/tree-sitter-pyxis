@@ -376,6 +376,10 @@
         {
           "type": "doc_comment",
           "named": true
+        },
+        {
+          "type": "extern_value",
+          "named": true
         }
       ]
     }
@@ -536,6 +540,10 @@
         },
         {
           "type": "enum_variant",
+          "named": true
+        },
+        {
+          "type": "extern_value",
           "named": true
         }
       ]
@@ -1251,6 +1259,10 @@
         },
         {
           "type": "enum_definition",
+          "named": true
+        },
+        {
+          "type": "extern_value",
           "named": true
         },
         {

@@ -133,3 +133,70 @@ pub type Player {
         type: (type_identifier
           (path
             (identifier)))))))
+
+===
+extern values nested inside type, enum, and bitflags bodies
+===
+pub type Player {
+    pub extern g_instance: *mut Player,
+    pub health: i32,
+}
+
+pub enum Color: u8 {
+    extern g_current: *mut Color,
+    Red,
+}
+
+pub bitflags AccessFlags: u32 {
+    extern g_mask: *mut u32,
+    READ = 1,
+}
+---
+(source_file
+  (type_definition
+    visibility: (visibility)
+    name: (identifier)
+    body: (type_body
+      (extern_value
+        visibility: (visibility)
+        name: (identifier)
+        type: (pointer_type
+          (type_identifier
+            (path
+              (identifier)))))
+      (field
+        visibility: (visibility)
+        name: (identifier)
+        type: (type_identifier
+          (path
+            (identifier))))))
+  (enum_definition
+    visibility: (visibility)
+    name: (identifier)
+    base_type: (type_identifier
+      (path
+        (identifier)))
+    (extern_value
+      name: (identifier)
+      type: (pointer_type
+        (type_identifier
+          (path
+            (identifier)))))
+    (enum_variant
+      name: (identifier)))
+  (bitflags_definition
+    visibility: (visibility)
+    name: (identifier)
+    base_type: (type_identifier
+      (path
+        (identifier)))
+    (extern_value
+      name: (identifier)
+      type: (pointer_type
+        (type_identifier
+          (path
+            (identifier)))))
+    (bitflag
+      name: (identifier)
+      value: (expression
+        (integer_literal)))))
