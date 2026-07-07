@@ -83,7 +83,8 @@ module.exports = grammar({
     // ========================================================================
     // Use declarations (src/parser/external.rs parse_use / parse_use_tree)
     // ========================================================================
-    use_declaration: ($) => seq("use", $.use_tree, ";"),
+    use_declaration: ($) =>
+      seq(field("visibility", optional($.visibility)), "use", $.use_tree, ";"),
 
     use_tree: ($) =>
       prec.left(

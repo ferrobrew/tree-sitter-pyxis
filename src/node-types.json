@@ -1402,7 +1402,18 @@
   {
     "type": "use_declaration",
     "named": true,
-    "fields": {},
+    "fields": {
+      "visibility": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "visibility",
+            "named": true
+          }
+        ]
+      }
+    },
     "children": {
       "multiple": false,
       "required": true,

@@ -203,6 +203,33 @@ use path::to::Thing as Other;
           (identifier))))))
 
 ================================================================================
+Pub use re-exports
+================================================================================
+
+pub use math::Vector3;
+pub use graphics::{Mesh, Texture};
+
+--------------------------------------------------------------------------------
+
+(source_file
+  (use_declaration
+    visibility: (visibility)
+    (use_tree
+      (identifier)
+      (use_tree
+        (identifier))))
+  (use_declaration
+    visibility: (visibility)
+    (use_tree
+      (identifier)
+      (use_tree_item
+        (use_tree
+          (identifier)))
+      (use_tree_item
+        (use_tree
+          (identifier))))))
+
+================================================================================
 Impl blocks and functions
 ================================================================================
 
