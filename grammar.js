@@ -67,7 +67,7 @@ module.exports = grammar({
         $.type_alias,
         $.const_declaration,
         $.impl_block,
-        $.backend_block,
+        $.splice_statement,
         $.extern_type,
         $.extern_value,
         $.function_declaration,
@@ -84,7 +84,13 @@ module.exports = grammar({
     // Use declarations (src/parser/external.rs parse_use / parse_use_tree)
     // ========================================================================
     use_declaration: ($) =>
-      seq(field("visibility", optional($.visibility)), "use", $.use_tree, ";"),
+      seq(
+        repeat($.attribute),
+        field("visibility", optional($.visibility)),
+        "use",
+        $.use_tree,
+        ";",
+      ),
 
     use_tree: ($) =>
       prec.left(
@@ -269,38 +275,25 @@ module.exports = grammar({
       ),
 
     // ========================================================================
-    // Backend blocks (src/parser/external.rs parse_backend)
+    // Splice statements (src/parser/external.rs parse_splice)
     //
-    //   backend <name> <slot> [for <Type>] <raw_string> ;
-    //   backend <name> { <splice> ; <splice> ; ... }
+    //   [#[cfg(...)]] <slot> [definition] [for <Type>] <string> ;
+    //
+    // A standalone `prologue`/`epilogue` splice, optionally cfg-gated. The
+    // `definition` modifier targets the cpp source file; `for <Type>`
+    // attributes the splice to a type's page.
     // ========================================================================
-    backend_block: ($) =>
+    splice_statement: ($) =>
       seq(
-        "backend",
-        field("name", $.backend_name),
-        choice(
-          // Braced form: `backend rust { prologue ...; epilogue ...; }`
-          seq(
-            "{",
-            repeat(seq($.backend_splice, ";")),
-            "}",
-          ),
-          // Shorthand form: `backend rust epilogue [for Type] [definition] r#"..."# ;`
-          seq($.backend_splice, ";"),
-        ),
-      ),
-
-    backend_splice: ($) =>
-      seq(
-        field("slot", $.backend_slot),
+        repeat($.attribute),
+        field("slot", $.splice_slot),
         optional("definition"),
         optional(seq("for", field("for_type", $.type_identifier))),
-        field("body", $.raw_string_literal),
+        field("body", choice($.string_literal, $.raw_string_literal)),
+        ";",
       ),
 
-    backend_name: ($) => $.identifier,
-
-    backend_slot: ($) => choice("prologue", "epilogue", "uses"),
+    splice_slot: ($) => choice("prologue", "epilogue"),
 
     // ========================================================================
     // Extern types & values (src/parser/external.rs)

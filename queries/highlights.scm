@@ -43,15 +43,14 @@
   "fn"
   "extern"
   "use"
-  "backend"
   "vftable"
   "const"
   "mut"
   "as"
 ] @keyword
 
-; `prologue` / `epilogue` / `uses` are backend slots, captured via their node
-(backend_slot) @keyword
+; `prologue` / `epilogue` are splice slots, captured via their node
+(splice_slot) @keyword
 
 ; ============================================================================
 ; Visibility (pub keyword)

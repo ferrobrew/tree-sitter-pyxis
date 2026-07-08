@@ -327,53 +327,83 @@ extern type Named;
     name: (identifier)))
 
 ================================================================================
-Backend blocks
+Splice statements
 ================================================================================
 
-backend rust epilogue r#"
+#[cfg(backend = "rust")]
+epilogue r#"
     fn body
 "#;
 
-backend cpp {
-    prologue r#"
+#[cfg(backend = "cpp")]
+prologue r#"
     type T;
 "#;
-    epilogue for Widget r#"
+
+#[cfg(backend = "cpp")]
+epilogue for Widget r#"
     impl Widget {}
 "#;
-}
 
-backend rust epilogue definition r#"
+#[cfg(backend = "cpp")]
+epilogue definition r#"
     code;
 "#;
 
 --------------------------------------------------------------------------------
 
 (source_file
-  (backend_block
-    name: (backend_name
-      (identifier))
-    (backend_splice
-      slot: (backend_slot)
-      body: (raw_string_literal (raw_string_content))))
-  (backend_block
-    name: (backend_name
-      (identifier))
-    (backend_splice
-      slot: (backend_slot)
-      body: (raw_string_literal (raw_string_content)))
-    (backend_splice
-      slot: (backend_slot)
-      for_type: (type_identifier
-        (path
-          (identifier)))
-      body: (raw_string_literal (raw_string_content))))
-  (backend_block
-    name: (backend_name
-      (identifier))
-    (backend_splice
-      slot: (backend_slot)
-      body: (raw_string_literal (raw_string_content)))))
+  (splice_statement
+    (attribute
+      (attribute_list
+        (attribute_item
+          (attribute_function
+            name: (identifier)
+            (attribute_assign
+              name: (identifier)
+              value: (expression
+                (string_literal)))))))
+    slot: (splice_slot)
+    body: (raw_string_literal (raw_string_content)))
+  (splice_statement
+    (attribute
+      (attribute_list
+        (attribute_item
+          (attribute_function
+            name: (identifier)
+            (attribute_assign
+              name: (identifier)
+              value: (expression
+                (string_literal)))))))
+    slot: (splice_slot)
+    body: (raw_string_literal (raw_string_content)))
+  (splice_statement
+    (attribute
+      (attribute_list
+        (attribute_item
+          (attribute_function
+            name: (identifier)
+            (attribute_assign
+              name: (identifier)
+              value: (expression
+                (string_literal)))))))
+    slot: (splice_slot)
+    for_type: (type_identifier
+      (path
+        (identifier)))
+    body: (raw_string_literal (raw_string_content)))
+  (splice_statement
+    (attribute
+      (attribute_list
+        (attribute_item
+          (attribute_function
+            name: (identifier)
+            (attribute_assign
+              name: (identifier)
+              value: (expression
+                (string_literal)))))))
+    slot: (splice_slot)
+    body: (raw_string_literal (raw_string_content))))
 
 ================================================================================
 Attributes with cfg predicates
