@@ -44,6 +44,37 @@ pub const GAME_NAME: str = "Pyxis";
       (string_literal))))
 
 ===
+const with c-string value
+===
+pub const DLL_NAME: cstr = c"MSVCP80";
+---
+(source_file
+  (const_declaration
+    visibility: (visibility)
+    name: (identifier)
+    type: (type_identifier
+      (path
+        (identifier)))
+    value: (expression
+      (c_string_literal))))
+
+===
+const with raw c-string value
+===
+pub const SYMBOL: cstr = cr#"??0?$basic_string@D"#;
+---
+(source_file
+  (const_declaration
+    visibility: (visibility)
+    name: (identifier)
+    type: (type_identifier
+      (path
+        (identifier)))
+    value: (expression
+      (raw_c_string_literal
+        (raw_string_content)))))
+
+===
 const with enum-value reference
 ===
 pub const DEFAULT_COLOR: Color = Color::Red;
