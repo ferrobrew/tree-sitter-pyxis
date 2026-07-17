@@ -514,6 +514,8 @@ module.exports = grammar({
         $.float_literal,
         $.string_literal,
         $.raw_string_literal,
+        $.c_string_literal,
+        $.raw_c_string_literal,
         $.identifier,
         $.path_expression,
       ),
@@ -571,6 +573,27 @@ module.exports = grammar({
 
     raw_string_content: (_) =>
       token.immediate(repeat1(choice(/[^"]/, /"[^#]/))),
+
+    // C-string literal: `c"..."` (with escape processing)
+    c_string_literal: ($) =>
+      token(
+        seq(
+          'c',
+          '"',
+          repeat(
+            choice(
+              /[^"\\]/,
+              /\\(.|\n)/,
+            ),
+          ),
+          '"',
+        ),
+      ),
+
+    // Raw C-string literal: `cr#"..."#` (no escape processing).
+    // Reuses `raw_string_content` since the inner content matching is identical.
+    raw_c_string_literal: ($) =>
+      seq('cr#"', optional($.raw_string_content), token.immediate('"#')),
 
     // `Self` type and identifiers. We don't make `Self` a separate keyword
     // token; it is captured as an identifier and matched in highlights.

@@ -23,6 +23,8 @@
 (float_literal) @float
 (string_literal) @string
 (raw_string_literal) @string.special
+(c_string_literal) @string.special
+(raw_c_string_literal) @string.special
 
 ; ============================================================================
 ; Attributes

@@ -506,6 +506,10 @@
       "required": true,
       "types": [
         {
+          "type": "c_string_literal",
+          "named": true
+        },
+        {
           "type": "float_literal",
           "named": true
         },
@@ -519,6 +523,10 @@
         },
         {
           "type": "path_expression",
+          "named": true
+        },
+        {
+          "type": "raw_c_string_literal",
           "named": true
         },
         {
@@ -997,6 +1005,21 @@
         },
         {
           "type": "unknown_type",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "raw_c_string_literal",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": false,
+      "types": [
+        {
+          "type": "raw_string_content",
           "named": true
         }
       ]
@@ -1536,7 +1559,15 @@
     "named": false
   },
   {
+    "type": "c_string_literal",
+    "named": true
+  },
+  {
     "type": "const",
+    "named": false
+  },
+  {
+    "type": "cr#\"",
     "named": false
   },
   {
