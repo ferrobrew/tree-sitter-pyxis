@@ -518,6 +518,8 @@ module.exports = grammar({
         $.raw_c_string_literal,
         $.identifier,
         $.path_expression,
+        $.struct_literal,
+        $.array_literal,
       ),
 
     // Path expression for enum-value references: `Color::Red`
@@ -525,6 +527,38 @@ module.exports = grammar({
       seq(
         $.identifier,
         repeat1(seq("::", $.identifier)),
+      ),
+
+    // Struct literal: `TypeName { field: value, ... }` or `Path::Type { ... }`
+    struct_literal: ($) =>
+      seq(
+        choice($.identifier, $.path_expression),
+        '{',
+        optional(seq(
+          $.struct_literal_field,
+          repeat(seq(',', $.struct_literal_field)),
+          optional(','),
+        )),
+        '}',
+      ),
+
+    struct_literal_field: ($) =>
+      seq(
+        field('name', $.identifier),
+        ':',
+        field('value', $.expression),
+      ),
+
+    // Array literal: `[expr, ...]`
+    array_literal: ($) =>
+      seq(
+        '[',
+        optional(seq(
+          $.expression,
+          repeat(seq(',', $.expression)),
+          optional(','),
+        )),
+        ']',
       ),
 
     // ========================================================================

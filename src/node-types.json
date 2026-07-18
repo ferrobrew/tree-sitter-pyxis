@@ -1,5 +1,20 @@
 [
   {
+    "type": "array_literal",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "expression",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "array_type",
     "named": true,
     "fields": {},
@@ -506,6 +521,10 @@
       "required": true,
       "types": [
         {
+          "type": "array_literal",
+          "named": true
+        },
+        {
           "type": "c_string_literal",
           "named": true
         },
@@ -535,6 +554,10 @@
         },
         {
           "type": "string_literal",
+          "named": true
+        },
+        {
+          "type": "struct_literal",
           "named": true
         }
       ]
@@ -1157,6 +1180,55 @@
           "named": true
         }
       ]
+    }
+  },
+  {
+    "type": "struct_literal",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "path_expression",
+          "named": true
+        },
+        {
+          "type": "struct_literal_field",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "struct_literal_field",
+    "named": true,
+    "fields": {
+      "name": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "identifier",
+            "named": true
+          }
+        ]
+      },
+      "value": {
+        "multiple": false,
+        "required": true,
+        "types": [
+          {
+            "type": "expression",
+            "named": true
+          }
+        ]
+      }
     }
   },
   {
